@@ -1,9 +1,9 @@
-import React from 'react';
-import styles from './header.module.scss';
+import React from "react";
+import styles from "./header.module.scss";
 
 const Header = () => (
   <header className={styles.wrapper}>
-    Header
+    <div>hello world</div>
   </header>
 );
 
