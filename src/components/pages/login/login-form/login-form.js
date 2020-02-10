@@ -1,7 +1,9 @@
 import React from "react";
 import { Form, Icon, Input, Button } from "antd";
+import { navigate } from "gatsby";
+import { handleLogin, isLoggedIn } from "utils/auth";
 import withForm from "components/shared/form";
-import styles from "./login-form.scss";
+import styles from "./login-form.module.scss";
 
 const LoginForm = props => {
   const {
@@ -10,57 +12,82 @@ const LoginForm = props => {
     errors,
     handleChange,
     handleBlur,
-    handleSubmit
+    handleSubmit,
+    hasErrors
   } = props;
 
+  if (isLoggedIn()) {
+    navigate(`/app/profile`);
+  }
+
   return (
-    <div className={styles.wrapper}>
-      <Form onSubmit={handleSubmit} className="login-form">
-        <Form.Item
-          validateStatus={
-            !touched.email ? "" : errors.email ? "error" : "success"
-          }
-          hasFeedback
-          help={!touched.email ? "" : errors.email}
+    <Form
+      onSubmit={() => {
+        handleSubmit();
+        navigate(`/app/profile`);
+      }}
+      className={styles.form}
+    >
+      <Form.Item
+        validateStatus={
+          !touched.username ? "" : errors.username ? "error" : "success"
+        }
+        hasFeedback
+        help={!touched.username ? "" : errors.username}
+      >
+        <Input
+          id="username"
+          size="large"
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={values.username}
+          placeholder="Введите логин"
+          prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
+          className={styles.input}
+        />
+      </Form.Item>
+      <Form.Item
+        validateStatus={
+          !touched.password ? "" : errors.password ? "error" : "success"
+        }
+        hasFeedback
+        help={!touched.password ? "" : errors.password}
+      >
+        <Input.Password
+          id="password"
+          size="large"
+          type="password"
+          value={values.password}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          placeholder="Введите пароль"
+          prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
+          className={styles.input}
+        />
+      </Form.Item>
+      <Form.Item>
+        <Button
+          type="primary"
+          onClick={() => {
+            handleSubmit();
+            handleLogin({
+              username: values.username,
+              password: values.password
+            });
+          }}
+          disabled={hasErrors(errors)}
+          className={styles.button}
         >
-          <Input
-            id="email"
-            size="large"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
-            placeholder="Введите e-mail"
-            prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
-          />
-        </Form.Item>
-        <Form.Item
-          validateStatus={
-            !touched.password ? "" : errors.password ? "error" : "success"
-          }
-          hasFeedback
-          help={!touched.password ? "" : errors.password}
-        >
-          <Input
-            id="password"
-            size="large"
-            type="password"
-            value={values.password}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            placeholder="Введите пароль"
-            prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
-          />
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" onClick={handleSubmit} disabled={errors}>
-            Войти
-          </Button>
-        </Form.Item>
-      </Form>
-    </div>
+          Войти в аккаунт
+        </Button>
+      </Form.Item>
+    </Form>
   );
 };
 
-const EnhancedComponent = withForm(LoginForm);
+const EnhancedComponent = withForm(LoginForm, {
+  subtitle: "Личный кабинет",
+  desc: "Пожалуйста, войдите в свой аккаунт"
+});
 
 export default EnhancedComponent;

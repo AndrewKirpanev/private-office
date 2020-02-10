@@ -1,19 +1,26 @@
-import React from 'react';
-import { Link } from 'gatsby';
-
-import LayoutMain from 'layouts/layout-main';
-import { SEO } from 'components/shared/seo/seo';
+import React from "react";
+import { getUser, isLoggedIn } from "utils/auth";
+import LayoutMain from "layouts/layout-main";
+import { SEO } from "components/shared/seo/seo";
+import { Link } from "gatsby";
 
 const IndexPage = () => (
   <LayoutMain>
     <SEO />
-    <div className="container">
-      <div className="columns">
-        <div className="column">1</div>
-        <div className="column">2</div>
-        <div className="column">3</div>
-      </div>
-    </div>
+    <h1>Hello {isLoggedIn() ? getUser().name : "world"}!</h1>
+    <p>
+      {isLoggedIn() ? (
+        <>
+          You are logged in, so check your{" "}
+          <Link to="/app/profile">profile</Link>
+        </>
+      ) : (
+        <>
+          You should <Link to="/app/login">log in</Link> to see restricted
+          content
+        </>
+      )}
+    </p>
   </LayoutMain>
 );
 
