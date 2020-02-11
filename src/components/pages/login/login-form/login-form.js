@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Icon, Input, Button } from "antd";
 import { navigate } from "gatsby";
-import { handleLogin, isLoggedIn } from "utils/auth";
+import { fireBaseLogin, isLogin } from "utils/auth";
 import withForm from "components/shared/form";
 import styles from "./login-form.module.scss";
 
@@ -16,7 +16,7 @@ const LoginForm = props => {
     hasErrors
   } = props;
 
-  if (isLoggedIn()) {
+  if (isLogin()) {
     navigate(`/app/profile`);
   }
 
@@ -30,18 +30,18 @@ const LoginForm = props => {
     >
       <Form.Item
         validateStatus={
-          !touched.username ? "" : errors.username ? "error" : "success"
+          !touched.email ? "" : errors.email ? "error" : "success"
         }
         hasFeedback
-        help={!touched.username ? "" : errors.username}
+        help={!touched.email ? "" : errors.email}
       >
         <Input
-          id="username"
+          id="email"
           size="large"
           onChange={handleChange}
           onBlur={handleBlur}
-          value={values.username}
-          placeholder="Введите логин"
+          value={values.email}
+          placeholder="Введите e-mail"
           prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
           className={styles.input}
         />
@@ -70,8 +70,8 @@ const LoginForm = props => {
           type="primary"
           onClick={() => {
             handleSubmit();
-            handleLogin({
-              username: values.username,
+            fireBaseLogin({
+              email: values.email,
               password: values.password
             });
           }}

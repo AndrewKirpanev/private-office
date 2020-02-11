@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Layout, Menu, Icon } from "antd";
+import { Layout, Menu, Breadcrumb, Icon } from "antd";
 import { navigate } from "gatsby";
-import { getUser, isLoggedIn, logout } from "utils/auth";
+import { isLogin } from "utils/auth";
 import styles from "./profile.module.scss";
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -9,10 +9,12 @@ const { SubMenu } = Menu;
 
 const Profile = ({ location }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const [user, setUser] = useState(null);
 
   const content = { message: "", login: true };
-  if (isLoggedIn()) {
-    content.message = `Hello, ${getUser().name}`;
+
+  if (isLogin()) {
+    content.message = `Hello,`;
   } else {
     content.message = "You are not logged in";
   }
@@ -21,7 +23,7 @@ const Profile = ({ location }) => {
     setCollapsed(!collapsed);
   };
 
-  if (!isLoggedIn() && location.pathname !== `/app/login`) {
+  if (!isLogin() && location.pathname !== `/app/login`) {
     navigate("/app/login");
     return null;
   }
@@ -72,7 +74,7 @@ const Profile = ({ location }) => {
       <Layout>
         <Header className={styles.header}>
           {content.message}
-          {isLoggedIn() ? (
+          {/* {isLogin() ? (
             <a
               href="/"
               onClick={event => {
@@ -82,16 +84,16 @@ const Profile = ({ location }) => {
             >
               Logout
             </a>
-          ) : null}
+          ) : null} */}
         </Header>
         <Content style={{ margin: "0 16px" }}>
-          <div style={{ padding: 24, background: "#fff", minHeight: 360 }}>
+          {/* <div style={{ padding: 24, background: "#fff", minHeight: 360 }}>
             {getUser().name} is a cat.
             <ul>
               <li>Name: {getUser().name}</li>
               <li>E-mail: {getUser().email}</li>
             </ul>
-          </div>
+          </div> */}
         </Content>
         <Footer style={{ textAlign: "center" }}>
           Ant Design ©2018 Created by Ant UED
